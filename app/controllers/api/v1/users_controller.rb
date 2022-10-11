@@ -23,7 +23,7 @@ class Api::V1::UsersController < ApplicationController
   def create
     user = User.new(user_params)
     if user.save
-      UserMailer.with(user: user).welcome_email.deliver_now
+      UserJob.perform_now(user)
       flash[:success] = "Thank you for sign up"
       token = jwt_encode(user_id: user.id)
       return render json: { token: token,data: Api::V1::UserSerializer.new(user)}
@@ -32,16 +32,10 @@ class Api::V1::UsersController < ApplicationController
       return render json: {errors: format_activerecord_errors(user.errors)},
           status: :unprocessable_entity 
     end  
+    
   end
 
-  #   if @user.save
-  #     token = jwt_encode(user_id: @user.id)
-  #     render json: {token: token, data:UserSerializer.new(@user)}, status: :created
-  #   else
-  #     render json: { errors: @user.errors.full_messages },
-  #            status: :unprocessable_entity
-  #   end   
-  # end
+ 
 
   def update
     user = User.find_by(id:params[:id])

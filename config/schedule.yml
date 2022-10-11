@@ -1,0 +1,3 @@
+User_Job:
+  cron: "*/1 * * * *"
+  class: "UserJob"
