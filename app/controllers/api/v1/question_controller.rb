@@ -2,14 +2,19 @@ class Api::V1::QuestionController < ApplicationController
 
 
   def show
-    tech = Technology.find_by(id:params[:id])
-    ques = tech.questions
-    if tech.present?
-
-      render json: ques 
+    @ques = Question.find_by(id:params[:id])
+    if @ques.present?
+     render json: @ques 
     else
       render json: {message: 'Record not found'}
     end
+    # tech = Technology.find_by(id:params[:id])
+    # ques = tech.questions
+    # if tech.present?
+    #   render json: ques 
+    # else
+    #   render json: {message: 'Record not found'}
+    # end
   end
 
 
@@ -18,3 +23,6 @@ class Api::V1::QuestionController < ApplicationController
       params.require(:data).permit(:image)
     end
 end 
+
+
+
